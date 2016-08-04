@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	default-autowire="byName" default-lazy-init="false">
+
+	<!-- 获取任务表的Bean -->
+	<bean id="qrtzJobDetailBuilder" class="com.yaochen.myquartz.config.impl.QrtzJobDetailForDbBuilder">
+		<property name="dataSource" ref="dataSource" />
+		<property name="poolDefaultJobSpringBeans_Split" value="," />
+		<property name="querySQL">
+			<value>select * from t_job_cfg t WHERE t.status='ACTIVE'</value>
+		</property>
+	</bean>
+	
+	<!-- Quartz Scheduler Manager -->
+	<bean class="com.yaochen.myquartz.SchedulerManagerBean" >
+		<property name="autoStartup" value="true" />
+		<property name="startupDelay" value="3" />
+		<property name="qrtzJobDetailBuilder" ref="qrtzJobDetailBuilder" />
+	</bean>
+	
+</beans>
